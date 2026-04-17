@@ -1,0 +1,662 @@
+{
+  "timestamp": "2026-04-12T02:29:10.841Z",
+  "total_endpoints": 16,
+  "results": [
+    {
+      "tool_slug": "GMAIL_LIST_MESSAGES",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/messages",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 3 top-level fields.",
+      "response_body": {
+        "messages": [
+          {
+            "id": "19d7f6924bea8ac8",
+            "threadId": "19d7f691a5241c6a"
+          },
+          {
+            "id": "19d7f691aef67a9b",
+            "threadId": "19d7f691aef67a9b"
+          },
+          {
+            "id": "19d7f691a5241c6a",
+            "threadId": "19d7f691a5241c6a"
+          },
+          "…2 more"
+        ],
+        "nextPageToken": "06208701830244488113",
+        "resultSizeEstimate": 201
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_SEND_MESSAGE",
+      "method": "POST",
+      "path": "/gmail/v1/users/me/messages/send",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 3 top-level fields.",
+      "response_body": {
+        "id": "19d7f8585df08dac",
+        "threadId": "19d7f8585df08dac",
+        "labelIds": [
+          "SENT"
+        ]
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.send"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.send"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_LIST_LABELS",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/labels",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 1 top-level fields.",
+      "response_body": {
+        "labels": [
+          {
+            "id": "CHAT",
+            "name": "[redacted]",
+            "messageListVisibility": "hide",
+            "labelListVisibility": "labelHide",
+            "type": "system"
+          },
+          {
+            "id": "SENT",
+            "name": "[redacted]",
+            "type": "system"
+          },
+          {
+            "id": "INBOX",
+            "name": "[redacted]",
+            "type": "system"
+          },
+          "…11 more"
+        ]
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.labels"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.labels"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_GET_PROFILE",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/profile",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 4 top-level fields.",
+      "response_body": {
+        "emailAddress": "[redacted]",
+        "messagesTotal": 279,
+        "threadsTotal": 272,
+        "historyId": "29428"
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_CREATE_DRAFT",
+      "method": "POST",
+      "path": "/gmail/v1/users/me/drafts",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 2 top-level fields.",
+      "response_body": {
+        "id": "r3898246169010492383",
+        "message": {
+          "id": "19d7f85853d81720",
+          "threadId": "19d7f85853d81720",
+          "labelIds": [
+            "DRAFT"
+          ]
+        }
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.compose"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.compose"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_LIST_THREADS",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/threads",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 3 top-level fields.",
+      "response_body": {
+        "threads": [
+          {
+            "id": "19d7f691a5241c6a",
+            "snippet": "[redacted]",
+            "historyId": "29373"
+          },
+          {
+            "id": "19d7f691aef67a9b",
+            "snippet": "[redacted]",
+            "historyId": "29288"
+          },
+          {
+            "id": "19d7f6891fa5434f",
+            "snippet": "[redacted]",
+            "historyId": "29166"
+          },
+          "…2 more"
+        ],
+        "nextPageToken": "18259461082595434572",
+        "resultSizeEstimate": 201
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_LIST_FOLDERS",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/folders",
+      "status": "invalid_endpoint",
+      "http_status_code": 404,
+      "response_summary": "Endpoint returned 404 — the path or HTTP method does not exist in the real API.",
+      "response_body": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 …",
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "available_scopes": []
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_LIST_EVENTS",
+      "method": "GET",
+      "path": "/calendar/v3/calendars/primary/events",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 10 top-level fields.",
+      "response_body": {
+        "kind": "calendar#events",
+        "etag": "\"p32nrn14ljfjp60o\"",
+        "summary": "bruceewayneenterprise@gmail.com",
+        "description": "",
+        "updated": "2026-04-12T01:58:08.897Z",
+        "timeZone": "UTC",
+        "accessRole": "owner",
+        "defaultReminders": [
+          {
+            "method": "popup",
+            "minutes": 30
+          }
+        ],
+        "nextSyncToken": "CK-7hJWb55MDEK-7hJWb55MDGAUg1ezgqgMo1ezgqgM=",
+        "items": []
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_CREATE_EVENT",
+      "method": "POST",
+      "path": "/calendar/v3/calendars/primary/events",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 17 top-level fields.",
+      "response_body": {
+        "kind": "calendar#event",
+        "etag": "\"3551921900123070\"",
+        "id": "adq9c4ohe5c9n1sbjb0spkvmn8",
+        "status": "confirmed",
+        "htmlLink": "https://www.google.com/calendar/event?eid=YWRxOWM0b2hlNWM5bjFzYmpiMHNwa3ZtbjggYnJ1Y2Vld2F5bmVlbnRlcnByaXNlQG0",
+        "created": "2026-04-12T02:29:09.000Z",
+        "updated": "2026-04-12T02:29:10.061Z",
+        "summary": "test-value",
+        "description": "test-value",
+        "creator": {
+          "email": "[redacted]",
+          "self": true
+        },
+        "organizer": {
+          "email": "[redacted]",
+          "self": true
+        },
+        "start": {
+          "dateTime": "2026-04-13T02:29:09Z",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2026-04-13T03:29:09Z",
+          "timeZone": "UTC"
+        },
+        "iCalUID": "adq9c4ohe5c9n1sbjb0spkvmn8@google.com",
+        "sequence": 0,
+        "reminders": {
+          "useDefault": true
+        },
+        "eventType": "default"
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.events"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/calendar.events"
+      ]
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_LIST_CALENDARS",
+      "method": "GET",
+      "path": "/calendar/v3/users/me/calendarList",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 4 top-level fields.",
+      "response_body": {
+        "kind": "calendar#calendarList",
+        "etag": "\"p32nrn14ljfjp60o\"",
+        "nextSyncToken": "CK-7hJWb55MDEh9icnVjZWV3YXluZWVudGVycHJpc2VAZ21haWwuY29t",
+        "items": [
+          {
+            "kind": "calendar#calendarListEntry",
+            "etag": "\"1753167009454911\"",
+            "id": "bruceewayneenterprise@gmail.com",
+            "summary": "bruceewayneenterprise@gmail.com",
+            "timeZone": "UTC",
+            "colorId": "14",
+            "backgroundColor": "#9fe1e7",
+            "foregroundColor": "#000000",
+            "selected": true,
+            "accessRole": "owner",
+            "defaultReminders": [
+              {
+                "method": "popup",
+                "minutes": 30
+              }
+            ],
+            "notificationSettings": {
+              "notifications": [
+                {
+                  "type": "eventCreation",
+                  "method": "email"
+                },
+                {
+                  "type": "eventChange",
+                  "method": "email"
+                },
+                {
+                  "type": "eventCancellation",
+                  "method": "email"
+                },
+                "…1 more"
+              ]
+            },
+            "primary": true,
+            "conferenceProperties": {
+              "allowedConferenceSolutionTypes": [
+                "hangoutsMeet"
+              ]
+            }
+          }
+        ]
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_LIST_REMINDERS",
+      "method": "GET",
+      "path": "/calendar/v3/calendars/primary/reminders",
+      "status": "invalid_endpoint",
+      "http_status_code": 404,
+      "response_summary": "Endpoint returned 404 — the path or HTTP method does not exist in the real API.",
+      "response_body": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 …",
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ],
+      "available_scopes": []
+    },
+    {
+      "tool_slug": "GMAIL_GET_MESSAGE",
+      "method": "GET",
+      "path": "/gmail/v1/users/me/messages/{messageId}",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 8 top-level fields.",
+      "response_body": {
+        "id": "19d7f6924bea8ac8",
+        "threadId": "19d7f691a5241c6a",
+        "labelIds": [
+          "UNREAD",
+          "CATEGORY_UPDATES",
+          "INBOX"
+        ],
+        "snippet": "[redacted]",
+        "payload": {
+          "partId": "",
+          "mimeType": "multipart/report",
+          "filename": "",
+          "headers": [
+            {
+              "name": "[redacted]",
+              "value": "bruceewayneenterprise@gmail.com"
+            },
+            {
+              "name": "[redacted]",
+              "value": "by 2002:a05:6e04:8013:10b0:3b9:b097:3ebe with SMTP id r19-n1csp51033ima;        Sat, 11 Apr 2026 18:58:10 -0700 (PDT)"
+            },
+            {
+              "name": "[redacted]",
+              "value": "by 2002:a05:6820:298f:b0:67d:e619:5c5a with SMTP id 006d021491bc7-68be5f4dd9amr4945354eaf.16.1775959090505;        Sat, 11 Apr 2026 18:58:10 -0700 (PDT)"
+            },
+            "…23 more"
+          ],
+          "body": {
+            "size": 0
+          },
+          "parts": [
+            {
+              "partId": "0",
+              "mimeType": "multipart/related",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "[redacted]",
+                  "value": "multipart/related; boundary=\"000000000000b6577e064f39b267\""
+                }
+              ],
+              "body": {
+                "size": 0
+              },
+              "parts": [
+                {
+                  "partId": "0.0",
+                  "mimeType": "multipart/alternative",
+                  "filename": "",
+                  "headers": [
+                    {
+                      "name": "[redacted]",
+                      "value": "multipart/alternative; boundary=\"000000000000b65785064f39b268\""
+                    }
+                  ],
+                  "body": {
+                    "size": 0
+                  },
+                  "parts": [
+                    {
+                      "partId": "0.0.0",
+                      "mimeType": "text/plain",
+                      "filename": "",
+                      "headers": [
+                        {
+                          "name": "[redacted]",
+                          "value": "text/plain; charset=\"UTF-8\""
+                        }
+                      ],
+                      "body": {
+                        "size": 574,
+                        "data": "DQoqKiBBZGRyZXNzIG5vdCBmb3VuZCAqKg0KDQpZb3VyIG1lc3NhZ2Ugd2Fzbid0IGRlbGl2ZXJlZCB0byB2YWxpZGF0b3ItdGVzdEBleGFtcGxlLmNvbSBiZWNhdXNlIHRoZSBkb21haW4gZXhhbXBsZS5jb20gY291bGRuJ3QgYmUgZm91bmQuIENoZWNrIGZvciB0eXBvcyBvciB1bm5lY2Vzc2FyeSBzcGFjZXMgYW5kIHRyeSBhZ2Fpbi4NCg0KTGVhcm4gbW9yZSBoZXJlOiBodHRwczovL3d3dy5yZmMtZWRpdG9yLm9yZy9pbmZvL3JmYzc1MDUNCihXYXJuaW5nOiBUaGlzIGxpbmsgd2lsbCB0YWtlIHlvdSB0byBhIHRoaXJkLXBhcnR5IHNpdGUpDQoNClRoZSByZXNwb25zZSB3YXM6DQoNCkROUyBFcnJvcjogRE5TIHR5cGUgJ214JyBsb29rdXAgb2YgZXhhbXBs…"
+                      }
+                    },
+                    {
+                      "partId": "0.0.1",
+                      "mimeType": "text/html",
+                      "filename": "",
+                      "headers": [
+                        {
+                          "name": "[redacted]",
+                          "value": "text/html; charset=\"UTF-8\""
+                        }
+                      ],
+                      "body": {
+                        "size": 2019,
+                        "data": "DQo8aHRtbD4NCjxoZWFkPg0KPHN0eWxlPg0KKiB7DQpmb250LWZhbWlseTpSb2JvdG8sICJIZWx2ZXRpY2EgTmV1ZSIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7DQp9DQo8L3N0eWxlPg0KPC9oZWFkPg0KPGJvZHk-DQo8dGFibGUgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIiBjbGFzcz0iZW1haWwtd3JhcHBlciIgc3R5bGU9InBhZGRpbmctdG9wOjMycHg7YmFja2dyb3VuZC1jb2xvcjojZmZmZmZmOyI-PHRib2R5Pg0KPHRyPjx0ZD4NCjx0YWJsZSBjZWxscGFkZGluZz0wIGNlbGxzcGFjaW5nPTA-PHRib2R5Pg0KPHRyPjx0ZCBzdHlsZT0ibWF4LXdpZHRoOjU2MHB4O3BhZGRpbmc6MjRweCAyNHB4IDMycHg7YmFja2dyb3VuZC1jb2xv…"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "partId": "0.1",
+                  "mimeType": "image/png",
+                  "filename": "icon.png",
+                  "headers": [
+                    {
+                      "name": "[redacted]",
+                      "value": "image/png; name=\"icon.png\""
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "attachment; filename=\"icon.png\""
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "base64"
+                    },
+                    "…1 more"
+                  ],
+                  "body": {
+                    "attachmentId": "ANGjdJ_PV8h04hwTx9j5o_fFbg_ZIjaVg8Iqns13jeKJYEIU5dNYBW03Ff7D8tAXHNuovDRyQh_ba0YUP-4Uy586XcU3fjYPV0djhxnirG_HejTs4Vh3KBjXW_AOizZzUDUm5oNbcqim3Jv-CSm0lNUeJvK4TTbD-c4cBJmuYIZAPMu3lSyPvokgJwV3lo_gA7EVjWRt0dk0yqYeU-twjDxN8rIe-w6DiK7X8o6-ty8jmveK7Kn-L0p03n1bb6-J8CjoLZHKw7JvTV-1kPR6IM_t7DTE4KSHjVJD1xS4gG1v-S17f-lpcu64mITmbFwN1OasXDr3vZlGF1FXeE8UfNIX2RWSWuy5mHtJojT_k2qVt0kP7u9vR-9lYBP_0_NQMUeJ_UKXyS0eZEJGH5bi",
+                    "size": 1450
+                  }
+                },
+                {
+                  "partId": "0.2",
+                  "mimeType": "image/png",
+                  "filename": "warning_triangle.png",
+                  "headers": [
+                    {
+                      "name": "[redacted]",
+                      "value": "image/png; name=\"warning_triangle.png\""
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "attachment; filename=\"warning_triangle.png\""
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "base64"
+                    },
+                    "…1 more"
+                  ],
+                  "body": {
+                    "attachmentId": "ANGjdJ_17uNLxNRsc7kJBVY6Zj-wTDYtWpvvd5343i_QV0hL5LxDwPrxZ7AF37bd4jnXgNyEVpECfsPi5pbMUnHs6vB_hs5laK7eIiakkSIzJXYNTiR2tAL0IA8EuhotesP6KzcrmpHNDiMxrkeaDMXLgGvWI6Wcyvhi0EbDVF6LivLmwFvTKyjATuZu9tZ1Js_x-73y3YiksfIpqm2UP070UfsG2Wd5r0FD7IGZfMjTtC_ANQQ2AARbg6oU8QOY6CZnkiZ0N4fxsMjt-2-c5EgAb3ms483cYqCjzEED0wwXvS3t8rBpa9MHGBb-1bFHVOuAPMFgWlIK7k8UXo3lhVnuup_lUZtfnluJcJBuOSCWyUKOsmFOAZJTg9jOw0C7qD_gOwkUib4CrBhOuwsM",
+                    "size": 466
+                  }
+                }
+              ]
+            },
+            {
+              "partId": "1",
+              "mimeType": "message/delivery-status",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "[redacted]",
+                  "value": "message/delivery-status"
+                }
+              ],
+              "body": {
+                "size": 0
+              },
+              "parts": [
+                {
+                  "partId": "1.0",
+                  "mimeType": "text/plain",
+                  "filename": "",
+                  "headers": [
+                    {
+                      "name": "[redacted]",
+                      "value": "dns; googlemail.com"
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "Sat, 11 Apr 2026 18:58:09 -0700 (PDT)"
+                    },
+                    {
+                      "name": "[redacted]",
+                      "value": "<CABbNWN+NCxiQri8DwTZxNsx+aLoPd5v24WkEvADSq4AbWBgr+w@mail.gmail.com>"
+                    }
+                  ],
+                  "body": {
+                    "size": 407,
+                    "data": "RmluYWwtUmVjaXBpZW50OiByZmM4MjI7IHZhbGlkYXRvci10ZXN0QGV4YW1wbGUuY29tDQpBY3Rpb246IGZhaWxlZA0KU3RhdHVzOiA1LjEuMTANCkRpYWdub3N0aWMtQ29kZTogc210cDsgRE5TIEVycm9yOiBETlMgdHlwZSAnbXgnIGxvb2t1cCBvZiBleGFtcGxlLmNvbSByZXNwb25kZWQgd2l0aCBjb2RlIE5PRVJST1INCiBUaGUgZG9tYWluIGV4YW1wbGUuY29tIGRvZXNuJ3QgcmVjZWl2ZSBlbWFpbCBhY2NvcmRpbmcgdG8gdGhlIGFkbWluaXN0cmF0b3I6IHJldHVybmVkIE51bGwgTVguIEZvciBtb3JlIGluZm9ybWF0aW9uLCBnbyB0byBodHRwczovL3d3dy5yZmMtZWRpdG9yLm9yZy9pbmZvL3JmYzc1MDUNCkxhc3QtQXR0ZW1wdC1EYXRlOiBTYXQsIDEx…"
+                  }
+                }
+              ]
+            },
+            {
+              "partId": "2",
+              "mimeType": "text/rfc822-headers",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "[redacted]",
+                  "value": "text/rfc822-headers"
+                }
+              ],
+              "body": {
+                "size": 4015,
+                "data": "QVJDLVNlYWw6IGk9MTsgYT1yc2Etc2hhMjU2OyB0PTE3NzU5NTkwOTA7IGN2PW5vbmU7DQogICAgICAgIGQ9Z29vZ2xlLmNvbTsgcz1hcmMtMjAyNDA2MDU7DQogICAgICAgIGI9a0MrVTR3b2FVb1ZOSW1tdXlpSVRwRjAwUXN0YkRhcDJLQ2lFSDNQUDRMdEkvbDBFWC9HQ2RKaTFoOEZ2QUltZ2Z5DQogICAgICAgICAvTDROMURuRHlQWXFGZVZ1MFNpUlVab3k2YWYzRmd4eTlaUlo0Q0JLMEpwVUdRNklGK1AxQk8yNE5xczNMcS9JcVYyMQ0KICAgICAgICAgQ1dKcjY5M0VRMnJXVlJOU3FCMlFIRSt6WHA4Z0Z3cUV3RzJVejlzZUxOY1UwMHlaNlBGU0VuK2tyenlUSjRBeGcyVjYNCiAgICAgICAgIEdZZ1duY3NEWWYwdWtiSzkxYTZScE9sampZaTBjNVFoTUh0bXhS…"
+              }
+            }
+          ]
+        },
+        "sizeEstimate": 16371,
+        "historyId": "29373",
+        "internalDate": "1775959090000"
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_TRASH_MESSAGE",
+      "method": "POST",
+      "path": "/gmail/v1/users/me/messages/{messageId}/trash",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 3 top-level fields.",
+      "response_body": {
+        "id": "19d7f6924bea8ac8",
+        "threadId": "19d7f691a5241c6a",
+        "labelIds": [
+          "UNREAD",
+          "TRASH",
+          "CATEGORY_UPDATES"
+        ]
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.modify"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/gmail.modify"
+      ]
+    },
+    {
+      "tool_slug": "GMAIL_ARCHIVE_MESSAGE",
+      "method": "POST",
+      "path": "/gmail/v1/users/me/messages/{messageId}/archive",
+      "status": "invalid_endpoint",
+      "http_status_code": 404,
+      "response_summary": "Endpoint returned 404 — the path or HTTP method does not exist in the real API.",
+      "response_body": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 …",
+      "required_scopes": [
+        "https://www.googleapis.com/auth/gmail.modify"
+      ],
+      "available_scopes": []
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_GET_EVENT",
+      "method": "GET",
+      "path": "/calendar/v3/calendars/primary/events/{eventId}",
+      "status": "valid",
+      "http_status_code": 200,
+      "response_summary": "Endpoint returned 200. Response contains 17 top-level fields.",
+      "response_body": {
+        "kind": "calendar#event",
+        "etag": "\"3551921900123070\"",
+        "id": "adq9c4ohe5c9n1sbjb0spkvmn8",
+        "status": "confirmed",
+        "htmlLink": "https://www.google.com/calendar/event?eid=YWRxOWM0b2hlNWM5bjFzYmpiMHNwa3ZtbjggYnJ1Y2Vld2F5bmVlbnRlcnByaXNlQG0",
+        "created": "2026-04-12T02:29:09.000Z",
+        "updated": "2026-04-12T02:29:10.061Z",
+        "summary": "test-value",
+        "description": "test-value",
+        "creator": {
+          "email": "[redacted]",
+          "self": true
+        },
+        "organizer": {
+          "email": "[redacted]",
+          "self": true
+        },
+        "start": {
+          "dateTime": "2026-04-13T02:29:09Z",
+          "timeZone": "UTC"
+        },
+        "end": {
+          "dateTime": "2026-04-13T03:29:09Z",
+          "timeZone": "UTC"
+        },
+        "iCalUID": "adq9c4ohe5c9n1sbjb0spkvmn8@google.com",
+        "sequence": 0,
+        "reminders": {
+          "useDefault": true
+        },
+        "eventType": "default"
+      },
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/calendar.readonly"
+      ]
+    },
+    {
+      "tool_slug": "GOOGLECALENDAR_DELETE_EVENT",
+      "method": "DELETE",
+      "path": "/calendar/v3/calendars/primary/events/{eventId}",
+      "status": "valid",
+      "http_status_code": 204,
+      "response_summary": "Endpoint returned 204. Response contains data.",
+      "response_body": "",
+      "required_scopes": [
+        "https://www.googleapis.com/auth/calendar.events"
+      ],
+      "available_scopes": [
+        "https://www.googleapis.com/auth/calendar.events"
+      ]
+    }
+  ],
+  "summary": {
+    "valid": 13,
+    "invalid_endpoint": 3,
+    "insufficient_scopes": 0,
+    "error": 0
+  }
+}
