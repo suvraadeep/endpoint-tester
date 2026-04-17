@@ -1,291 +1,218 @@
 # API Endpoint Executability Validator Agent
 
-**Role:** Agents Engineer | **Duration:** 90 minutes | **Format:** Hands-on implementation with an AI coding agent
+## Overview
+
+This project focuses on building an AI-driven agent that validates whether API endpoints are executable in real-world scenarios. The system is designed to simulate a production-level verification layer that ensures endpoints are functional, accessible, and properly configured before integration.
+
+The agent takes a set of API endpoint definitions and determines whether each endpoint:
+
+* Executes successfully
+* Exists in the API
+* Fails due to insufficient permissions
+* Fails due to other errors
+
+The solution is designed to generalize across different applications without relying on hardcoded logic.
 
 ---
 
-## Context
+## Problem Statement
 
-At Composio, we integrate with 2,000+ apps and 42,000+ API endpoints. Before we build an integration for any endpoint, we need to verify that the endpoint can actually be executed successfully — that it exists, the auth works, and a well-formed request gets a valid response.
+When working with large-scale API integrations, not all endpoints are reliable. Some may:
 
-Your job is to **build an AI agent that automates this verification**. Given a set of API endpoint definitions for any app, your agent should attempt to execute each one and determine:
+* Not exist
+* Require specific permissions
+* Depend on other endpoints
+* Fail due to incorrect request construction
 
-- Can this endpoint be successfully called at least once? If yes, it's **valid**.
-- Does this endpoint actually exist? If not, it's **invalid** (fake/wrong path/wrong method).
-- Does the connected account have the right permissions? If not, it's an **auth/scope issue**.
-- Did something else go wrong? If so, capture the error.
+The goal of this project was to build an intelligent agent that:
 
-**This is not about testing business logic or edge cases.** You're doing a single-request sanity check: "Can I successfully execute this endpoint with a reasonable request?" If you get one successful response, that endpoint passes. If the endpoint is genuinely broken or doesn't exist, your agent should recognize that and report it clearly.
+* Dynamically constructs valid API requests
+* Resolves dependencies between endpoints
+* Executes endpoints using authenticated access
+* Accurately classifies outcomes
 
-## What makes this hard
+---
 
-Some endpoints are **fake** — they don't exist in the real API. Your agent needs to tell the difference between "this endpoint doesn't exist" and "I called it wrong."
+## Setup
 
-Some endpoints have **dependencies** — you can't call `GET /messages/{messageId}` without first calling `GET /messages` to get a valid ID. Your AI agent needs to figure this out dynamically, for any app.
+### 1. Composio Account and API Key
 
-Some endpoints need **request bodies** — your AI agent needs to construct minimal valid payloads based on the parameter definitions.
+To execute API calls, I used Composio for managed authentication.
 
-Some endpoints will fail due to **insufficient scopes** — the connected account may not have the right permissions. Your AI agent should detect this (typically a 403) and classify it correctly, not keep retrying.
+Steps followed:
 
-Your AI agent should handle all of this for **any app** — not just the sample Gmail/Calendar endpoints. Don't hardcode app-specific logic.
+1. Created an account on [https://platform.composio.dev](https://platform.composio.dev)
+2. Generated an API key from the settings section
+3. Used the API key during setup
 
-## Sample data
+---
 
-You're given 16 sample endpoints in `src/endpoints.json`: 10 Gmail + 6 Google Calendar. The mix includes:
-- Valid endpoints that should return successful responses
-- Fake endpoints that don't exist in the real API
-- Endpoints that may fail due to missing scopes
+### 2. Google Account Connection
 
-Use these to develop and sanity-check your solution. But keep in mind: **we will run your AI agent against other apps and endpoints during evaluation.**
+The agent interacts with Gmail and Google Calendar APIs.
 
-### Endpoint definition format
+Setup considerations:
 
-Each endpoint in `endpoints.json` looks like this:
+* Used a personal Google account
+* Preferred a secondary account to avoid unintended changes
+* Ensured the account had existing emails and calendar events
 
-```json
-{
-  "tool_slug": "GMAIL_LIST_MESSAGES",
-  "description": "Lists the messages in the user's mailbox.",
-  "method": "GET",
-  "path": "/gmail/v1/users/me/messages",
-  "required_scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
-  "parameters": {
-    "query": [
-      { "name": "maxResults", "type": "integer", "required": false, "description": "Maximum number of messages to return." }
-    ],
-    "path": [],
-    "body": null
-  }
-}
+---
+
+
+### 3. Bun Runtime
+
+The project is built using Bun.
+
+Installation:
+
+```bash
+curl -fsSL https://bun.sh/install | bash
 ```
 
-- `tool_slug` — a unique identifier for the endpoint (used in reporting, not for execution)
-- `method` + `path` — the actual HTTP endpoint to call
-- `required_scopes` — what permissions the endpoint needs
-- `parameters` — query params, path params (like `{messageId}`), and request body schema
+Verification:
 
-## How to call endpoints: `proxyExecute()`
-
-Use `composio.tools.proxyExecute()` to call endpoints. You give it the HTTP method and path, and Composio handles all authentication (OAuth tokens, refresh, etc.) for you.
-
-```typescript
-import { Composio } from "@composio/core";
-
-const composio = new Composio();
-
-// Simple GET request
-const result = await composio.tools.proxyExecute({
-  endpoint: "/gmail/v1/users/me/messages",
-  method: "GET",
-  connectedAccountId: "candidate",
-  parameters: [
-    { in: "query", name: "maxResults", value: 5 }
-  ],
-});
-
-// POST request with a body
-const result = await composio.tools.proxyExecute({
-  endpoint: "/calendar/v3/calendars/primary/events",
-  method: "POST",
-  connectedAccountId: "candidate",
-  body: {
-    summary: "Test Event",
-    start: { dateTime: "2026-03-25T10:00:00Z", timeZone: "UTC" },
-    end: { dateTime: "2026-03-25T11:00:00Z", timeZone: "UTC" },
-  },
-});
+```bash
+bun --version
 ```
 
-**`proxyExecute` parameters:**
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `endpoint` | Yes | API path (e.g., `/gmail/v1/users/me/messages`) |
-| `method` | Yes | `"GET"`, `"POST"`, `"PUT"`, `"DELETE"`, or `"PATCH"` |
-| `connectedAccountId` | Yes | Use `"candidate"` (set up during `setup.sh`) |
-| `parameters` | No | Array of `{ in: "query" \| "header", name, value }` |
-| `body` | No | Request body object for POST/PUT/PATCH |
+---
 
-**Response structure:**
+## Approach
 
-```typescript
-interface ProxyExecuteResponse {
-  status: number;                        // HTTP status code (200, 404, 403, etc.)
-  data?: unknown;                        // Response body (JSON)
-  headers?: Record<string, string>;      // Response headers
-}
-```
+The system is designed using an agent-based architecture where each endpoint is evaluated independently.
 
-Use `result.status` to classify endpoints: 2xx = valid, 404 = invalid, 403 = insufficient scopes, etc.
+Key aspects:
 
-**Important:**
-- **Do NOT make raw HTTP requests** or extract bearer tokens manually. `proxyExecute()` handles all auth.
-- **Path parameters** (like `{messageId}`) must be substituted into the path string before calling. `proxyExecute` only handles query and header params.
-- **OAuth, token refresh, and rate limits** are handled by Composio — these are out of scope for your agent.
-- **Your agent will take real actions** on the connected Google account (send emails, trash messages, create/delete calendar events). Use a secondary or throwaway Google account if possible.
+* No fixed execution order
+* Dynamic dependency resolution
+* Intelligent request construction
+* Robust error handling
 
-## Classification
+---
 
-Your agent must classify each endpoint into one of these statuses:
+## Core Features
 
-| Status | Meaning | Typical signals |
-|--------|---------|-----------------|
-| `valid` | Endpoint exists and can be successfully executed | Any 2xx response (200, 201, 204, etc.) |
-| `invalid_endpoint` | Endpoint does not exist | 404, "not found", method not allowed |
-| `insufficient_scopes` | Endpoint exists but account lacks permissions | 403, "forbidden", "insufficient permissions" |
-| `error` | Something else went wrong | 400, 500, timeouts, malformed responses |
+### Endpoint Execution
 
-**What counts as "valid":** Any 2xx response means the endpoint works. Your agent doesn't need to validate the response body or test multiple scenarios — one successful call is enough.
+All API calls are executed using `proxyExecute()` which handles authentication and request execution.
 
-**Key challenge — avoiding false negatives:** The most common mistake is classifying a valid endpoint as `error` because your agent constructed a bad request (wrong params, missing required fields, bad path parameter). Think carefully about how your agent avoids this. A valid endpoint that your agent fails to call correctly is worse than admitting uncertainty.
+Supports:
 
-## Dependency resolution
+* GET, POST, PUT, PATCH, DELETE
+* Query parameters
+* Request bodies
 
-Some endpoints need data from other endpoints. For example:
+---
 
-```
-GET /gmail/v1/users/me/messages/{messageId}
-```
+### Endpoint Classification
 
-Your agent can't just make up a `messageId`. It needs to:
-1. Recognize that `{messageId}` is a path parameter
-2. Find another endpoint that can provide a valid message ID (e.g., `GET /messages` → pick an ID from the response)
-3. Substitute the real ID into the path
-4. Then call the endpoint
+Each endpoint is classified into one of the following:
 
-This "list → pick item → use in detail request" pattern appears across most APIs. Your agent should handle it generically — not just for Gmail messages, but for any resource type in any app.
+| Status              | Description                               |
+| ------------------- | ----------------------------------------- |
+| valid               | Successfully executed with a 2xx response |
+| invalid_endpoint    | Endpoint does not exist                   |
+| insufficient_scopes | Permission issues                         |
+| error               | Other failures                            |
 
-## Architecture
+---
 
-**One AI agent per endpoint** — each endpoint should be tested by its own AI agent instance. Don't use a single agent that sequentially loops through all endpoints.
+### Dependency Resolution
 
-**No hardcoded execution order** — AI agents should run in any order (or concurrently). If an AI agent needs data from another endpoint, it resolves that dependency dynamically.
+For endpoints requiring dynamic data such as IDs, the agent:
 
-**Think about how your AI agent avoids its own mistakes.** The biggest risk isn't fake endpoints — it's your AI agent misusing valid endpoints (wrong params, bad payload) and then misclassifying them as invalid. Good architectures have strategies for this:
-- How does the AI agent construct valid requests from the parameter definitions?
-- How does it distinguish "this endpoint doesn't exist" from "I called it wrong"?
-- Does it retry with different parameters before giving up?
+* Detects path parameters
+* Identifies supporting endpoints
+* Extracts valid values
+* Substitutes them into requests
 
-We care more about the quality of your architecture than whether you got 100% accuracy on the sample data. **A well-architected AI agent with a minor bug scores better than a hacky script that gets the right answers on 16 endpoints but would break on the 17th.**
+This enables handling of dependent endpoints without manual intervention.
 
-## What you must submit
+---
 
-1. **Your AI agent implementation** — implement `runAgent()` in `src/agent.ts`
-2. **A test report** — `report.json` generated by `bun src/run.ts`
-3. **An architecture doc** — fill out `ARCHITECTURE.md` in the project root. Explain:
-   - Your agent's design and how it works
-   - How you handle dependency resolution
-   - How you avoid false negatives (misclassifying valid endpoints)
-   - What tradeoffs you made and what you'd improve with more time
-   - Why you chose your particular architecture pattern (single agent, multi-agent, orchestrator, etc.)
-4. **A Loom video** (2–4 minutes) covering:
-   - Walk through your architecture and key design decisions
-   - Explain your dependency resolution strategy
-   - Discuss failure modes — what could go wrong and how your agent handles it
-   - What you'd improve or do differently with more time
+### Request Construction
 
-The architecture doc and video are **part of your evaluation**. Even if your AI agent scores perfectly on the sample data, a poor explanation of your architecture will lower your score. Conversely, a thoughtful architecture with a clear explanation can score well even if your AI agent has a bug that reduces accuracy.
+The agent builds requests based on endpoint metadata:
 
-## Evaluation
+* Populates query parameters with valid defaults
+* Constructs minimal request bodies
+* Resolves path variables dynamically
 
-### How we evaluate
+---
 
-Your AI agent will be run against the sample Gmail/Calendar endpoints as a sanity check, and then against additional apps and endpoints you haven't seen.
+### Error Handling
 
-### What we look for
+The system distinguishes between:
 
-- **Correctness across apps** — How accurately does your AI agent classify endpoints? Are fake endpoints caught? Are scope issues detected? Does it handle different API styles, error formats, and response structures? This is the most important factor.
-- **Avoiding false negatives** — Does your AI agent minimize cases where it fails to execute a valid endpoint due to its own mistakes (bad params, missing body, wrong path substitution)?
-- **Dependency resolution** — Can your AI agent handle endpoints that need data from other endpoints? Does it figure this out dynamically?
-- **Architecture quality** — Is this a real AI agent with LLM-driven reasoning, or just a deterministic script? Is the design explained clearly in the architecture doc and video? Would this approach scale to thousands of endpoints across hundreds of apps?
-- **Completeness** — Does every endpoint get tested and reported?
-- **Code quality** — Clean abstractions, good error handling, readable code
+* Invalid endpoints
+* Incorrect request construction
+* Permission issues
 
-### Architecture matters more than score
+It minimizes incorrect classifications by retrying with improved inputs when needed.
 
-We evaluate your **thinking and design** as much as your results. A thoughtful, well-explained architecture that would generalize well — but happens to have a bug on the sample data — is more valuable to us than a hardcoded solution that gets 100% on Gmail but would fall apart on Stripe or Jira.
+---
 
-## Constraints
+## Sample Data
 
-### Use an AI coding agent
+The project uses a dataset of 16 endpoints:
 
-Use an AI coding agent to build your solution. Our recommended workflow:
+* 10 Gmail endpoints
+* 6 Google Calendar endpoints
 
-- **[Codex CLI](https://github.com/openai/codex) with GPT-5.3-Codex** for implementation — fast and accurate for coding tasks
-- **[Claude Code](https://docs.anthropic.com/en/docs/claude-code) with Claude Opus 4.6** for high-level planning, architecture design, and writing your `ARCHITECTURE.md`
+These include:
 
-You're welcome to use whatever AI tools you prefer — [Cursor](https://cursor.com), Windsurf, or any other agent. Use your own API keys / subscriptions. We care about the result, not the specific tool.
+* Valid endpoints
+* Fake endpoints
+* Endpoints with permission issues
 
-Use your own API keys / subscriptions for the AI tools you choose.
+The agent is designed to generalize beyond this dataset.
 
-### Tech stack
-
-Use **Bun** (not Node.js). The project is already set up for Bun. You are free to use any additional libraries.
-
-## Getting Started
-
-1. **Get your Composio API key** from [platform.composio.dev](https://platform.composio.dev) (free account).
-
-2. **Run the setup script:**
-   ```bash
-   COMPOSIO_API_KEY=<your_key> sh setup.sh
-   ```
-   This installs dependencies, creates auth configs, connects your Google account via OAuth, and runs a sanity check to verify `proxyExecute()` works. The connected account ID is `"candidate"`.
-
-3. **Explore the sample endpoints:**
-   ```bash
-   bun src/index.ts
-   ```
-
-4. **Implement your agent** in `src/agent.ts` (see type definitions in `src/types.ts`).
-
-5. **Run and validate:**
-   ```bash
-   bun src/run.ts
-   ```
-   This calls your `runAgent()`, validates the output, and writes `report.json`.
-
-6. **Write your architecture doc** in `ARCHITECTURE.md`.
+---
 
 ## Project Structure
 
-```
+```bash
 src/
-├── agent.ts          <- YOUR IMPLEMENTATION GOES HERE
-├── types.ts          <- Input/output type definitions (do not modify)
-├── run.ts            <- Runner that calls your agent and validates output (do not modify)
-├── endpoints.json    <- Sample endpoint definitions (Gmail + Google Calendar)
-├── index.ts          <- Prints a summary of endpoints
-└── connect.ts        <- Google OAuth connection setup
-ARCHITECTURE.md       <- YOUR ARCHITECTURE DOC (create this)
+├── agent.ts
+├── types.ts
+├── run.ts
+├── endpoints.json
+├── index.ts
+└── connect.ts
+
+ARCHITECTURE.md
+report.json
 ```
 
-### How the runner works
+---
 
-1. `run.ts` loads endpoints from `endpoints.json` and passes them to your `runAgent()` function along with an authenticated Composio client.
-2. Your `runAgent()` tests each endpoint and returns a `TestReport`.
-3. `run.ts` validates the report (all endpoints covered, valid statuses, summary counts match) and writes `report.json`.
+## Execution Flow
 
-You can create additional files and modules — just keep `runAgent()` in `agent.ts` as the entry point.
+1. Load endpoint definitions
+2. Initialize an agent for each endpoint
+3. Construct request
+4. Resolve dependencies if required
+5. Execute API call
+6. Analyze response
+7. Classify endpoint
+8. Store results
 
-## Output format
+---
 
-Your agent returns a `TestReport` (see `src/types.ts`). The report JSON looks like:
+## Output Format
+
+The system generates a structured report:
 
 ```json
 {
-  "timestamp": "2026-03-25T10:00:00.000Z",
+  "timestamp": "...",
   "total_endpoints": 16,
   "results": [
     {
       "tool_slug": "GMAIL_LIST_MESSAGES",
-      "method": "GET",
-      "path": "/gmail/v1/users/me/messages",
       "status": "valid",
-      "http_status_code": 200,
-      "response_summary": "Returned list of messages successfully",
-      "response_body": { "messages": [{ "id": "19d1b2ff8f72b035", "threadId": "19d1b2fc48ac0f35" }], "resultSizeEstimate": 201 },
-      "required_scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
-      "available_scopes": ["https://www.googleapis.com/auth/gmail.readonly"]
+      "http_status_code": 200
     }
   ],
   "summary": {
@@ -297,22 +224,69 @@ Your agent returns a `TestReport` (see `src/types.ts`). The report JSON looks li
 }
 ```
 
-Each result includes a `response_summary` field. A high-quality summary that explains **why** the endpoint was classified that way (not just the status code, but what the response indicated) is a bonus — think of it as a cherry on top.
+---
 
-## How to Submit
+## Key Challenges
 
-1. **Make sure `report.json` exists** — run `bun src/run.ts` and verify it passes validation.
+### Avoiding False Negatives
 
-2. **Make sure `ARCHITECTURE.md` exists** — this is required and will be used in scoring.
+Ensuring valid endpoints are not misclassified due to incorrect requests.
 
-3. **Record a Loom video** (2–4 minutes) at [loom.com](https://loom.com) — explain your architecture, decisions, and tradeoffs.
+Solution:
 
-4. **Submit:**
-   ```bash
-   sh upload.sh <your_email> <loom_video_url>
-   ```
-   This uploads your code, report, architecture doc, and agent session traces.
+* Construct minimal valid inputs
+* Retry with alternative parameter configurations
+* Validate request structure before execution
 
 ---
 
-*We're evaluating how you think and build AI agents. Your submission must be an AI agent — not a deterministic script. A thoughtful AI agent architecture that generalizes is worth more than a perfect score on 16 sample endpoints.*
+### Handling Dependencies
+
+Many endpoints require prior data retrieval.
+
+Solution:
+
+* Detect path parameters
+* Identify related endpoints dynamically
+* Extract and reuse identifiers
+
+---
+
+### Generalization Across APIs
+
+The system must work across different APIs without customization.
+
+Solution:
+
+* Avoid hardcoded logic
+* Use schema-driven request construction
+* Apply generic dependency patterns
+
+---
+
+## Architecture
+
+To be documented in `ARCHITECTURE.md`.
+
+---
+
+## Results
+
+* Successfully validated endpoints across multiple categories
+* Handled dependent endpoints dynamically
+* Built a scalable and extensible architecture
+
+---
+
+## Improvements
+
+* Smarter request body generation using schema inference
+* Caching dependency results
+* More advanced retry strategies
+* Confidence scoring for classifications
+
+---
+
+## Conclusion
+
+This project demonstrates how AI agents can automate API validation at scale. The system focuses on correctness, adaptability, and robustness, making it suitable for large-scale API integration workflows.
